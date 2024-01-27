@@ -69,7 +69,7 @@ class Ui_MainWindow(object):
 
     def crear_base(self):
         cursor = conn.cursor()
-        cadena_sql = 'CREATE TABLE Empleado (nombre TEXT, sueldo INTEGER)'
+        cadena_sql = 'CREATE TABLE Empleado (nombre TEXT, sueldo INTEGER, iva INTEGER, total INTEGER)'
         try:
             cursor.execute(cadena_sql)
         except:
@@ -80,8 +80,10 @@ class Ui_MainWindow(object):
         cursor = conn.cursor()
         nombre = str(self.nombre.text())
         sueldo = int(self.sueldo.text())
-        cadena_sql = """INSERT INTO Empleado (nombre, sueldo) VALUES ('%s', %d);""" % \
-    (nombre, sueldo)
+        iva = sueldo * 0.12
+        total = sueldo + iva
+        cadena_sql = """INSERT INTO Empleado (nombre, sueldo, iva, total) VALUES ('%s', %d, %f, %f);""" % \
+    (nombre, sueldo, iva, total)
         # ejecutar el SQL
         cursor.execute(cadena_sql)
         # confirmar los cambios
@@ -93,7 +95,7 @@ class Ui_MainWindow(object):
         cadena_consulta_sql = "SELECT * from Empleado"
         cursor.execute(cadena_consulta_sql)
         informacion = cursor.fetchall()
-        database_table_column_count = 2
+        database_table_column_count = 4 # ahora son cuatro columnas
         self.listaEmpleados.setColumnCount(database_table_column_count)
         numero_filas = len(informacion)
         self.listaEmpleados.setRowCount(numero_filas)
